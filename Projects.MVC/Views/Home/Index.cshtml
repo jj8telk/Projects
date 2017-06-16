@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Projects.BL.Project>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<a href='@Url.Action("Add", "Home")' class="btn btn-sm btn-primary">Create New Project</a>
+<br /><br />
+@foreach (var item in Model) {
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="overflow:auto;">
+                    <div style="float:left;">
+                        <h3 style="margin:0;">@Html.DisplayFor(modelItem => item.ProjectName)</h3>
+                    </div>
+                    <div style="float:right;">
+                        <span class='label label-@Html.DisplayFor(modelItem => item.Status.StatusColor)'>
+                            @Html.DisplayFor(modelItem => item.Status.StatusName)
+                        </span>
+                    </div>
+                </div>
+                <div class="panel-body">                    
+                    <div style="float:left;">
+                        <p>@Html.DisplayFor(modelItem => item.ProjectDescription)</p>
+                        <a href='@Url.Action("Index", "Project", new { id = item.ProjectID })' class='btn btn-default'>View &raquo;</a>
+                    </div>
+                    <div style="float:right;">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

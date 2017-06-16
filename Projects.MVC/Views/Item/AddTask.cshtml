@@ -1,0 +1,25 @@
+﻿@model Projects.BL.Task
+
+@{
+    ViewBag.Title = "AddTask";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Item.Project.ProjectName</h2>
+<h4>&laquo;Breadcrumb Trail&raquo;</h4>
+<br />
+
+@Html.Partial("_ItemView", (Projects.BL.Item)ViewBag.Item)
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()    
+    @Html.EditorFor(model => model)
+}
+
+@Html.Partial("_ItemListView", (List<Projects.BL.Item>)ViewBag.ItemList)
+<a href='@Url.Action("AddSubItem", "Item", new { id = ViewBag.Item.ItemID })' class="btn btn-sm btn-primary">Add Sub Item &raquo;</a>
+
+<div>
+    <a href='@Url.Action("Index", "Item", new { id = ViewBag.Item.ItemID })' class="btn btn-sm btn-default">&laquo; Back</a>
+</div>

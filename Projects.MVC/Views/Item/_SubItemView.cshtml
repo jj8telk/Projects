@@ -1,0 +1,46 @@
+﻿@foreach (var subItem in Model.GetItems())
+{
+    <div class="panel-group" style="margin-bottom:10px;">
+        <div class="panel panel-@subItem.Status.StatusColor">
+            <div class="panel-heading" style="overflow:auto;">
+                <div style="float:left;">
+                    <h4 class="panel-title">
+                        <a data-toggle='collapse' href='#collapse-@subItem.ItemID'>@subItem.ItemName</a>
+                    </h4>
+                </div>
+                <div style="float:right;">
+                    <a href='@Url.Action("Index", "Item", new { id = subItem.ItemID })' class="btn btn-xs btn-primary">View &raquo;</a>
+                </div>
+            </div>
+            <div id='collapse-@subItem.ItemID' class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table class="table" style="font-size:11px;border-bottom:1px solid #ddd;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Start</th>
+                                <th>Due</th>
+                                <th>Complete</th>
+                                <th>Last Worked On</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var task in subItem.GetTasks())
+                            {
+                                <tr>
+                                    <td>@task.TaskDescription</td>
+                                    <td>@task.StartDateFormatted</td>
+                                    <td>@task.DueDateFormatted</td>
+                                    <td>@task.CompleteDateFormatted</td>
+                                    <td>@task.LastWorkedOnDateFormatted</td>
+                                    <td style="padding-left:10px;"><span class='label label-@task.Status.StatusColor)'>@task.Status.StatusName)</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,97 @@
+﻿@model Projects.BL.ProjectSVN
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnAdd").click(function () {
+            $("#divAdd").show();
+            $(this).hide();
+        });
+
+        $("#btnCancel").click(function () {
+            $("#divAdd").hide();
+            $("#btnAdd").show();
+        });
+
+        $(".btnRemove").click(function () {
+            return confirm("Are you sure?");
+        });
+
+        $("#txtAdd").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/Project/Autocomplete/1")',
+                    dataType: "json",
+                    data: {
+                        q: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            focus: function (event, ui) {
+                $("#txtAdd").val(ui.item.label);  // forces name to be displayed in textbox instead of ID after selection is made
+                return false;
+            },
+            select: function (event, ui) {
+                $("#txtAdd").val(ui.item.label); // display the selected text
+                $("#hdnAdd").val(ui.item.value); // save selected id to hidden input
+
+                return false;
+            }
+        });
+    });
+</script>
+
+<h2>@Model.Project.ProjectName</h2>
+<h3>SVN</h3>
+
+<table class="table table-bordered">
+    @for (var i = 0; i < Model.SVN.Count; i++)
+{
+        <tr>
+            <th>@Model.SVN[i].SVNName</th>
+            <td><a href='@Model.SVN[i].SVNLocation' target="_blank">@Model.SVN[i].SVNLocation</a></td>
+            <td>
+                @using (Html.BeginForm("Delete", "ProjectSVN", new { id = Model.ProjectID }, FormMethod.Post))
+                {
+                    <input class="btn btn-xs btn-danger btnRemove" type="submit" value="remove" />
+                    @Html.HiddenFor(model => model.SVNID, new { id = "hdnSVN" + @i })
+                    @Html.HiddenFor(model => model.ProjectID)
+                    <script>
+                        $("#hdnSVN" +@i).val(@Model.SVN[i].SVNID);
+                    </script>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<input id="btnAdd" class="btn btn-sm btn-primary" type="button" value="Add" />
+
+@using (Html.BeginForm("Edit", "ProjectSVN", new { id = Model.ProjectID }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div id="divAdd" class="row" style="display:none;">
+        <div class="col-md-12">
+            @Html.TextBoxFor(model => model.SVNName, new { id = "txtAdd", @class = "form-control" })
+            @Html.HiddenFor(model => model.SVNID, new { id = "hdnAdd" })
+            @Html.HiddenFor(model => model.ProjectID, new { id = "hdnProj" })
+            <br />
+            <input id="btnSave" class="btn btn-sm btn-success" type="submit" value="Save" />
+            <input id="btnCancel" class="btn btn-sm btn-default" type="button" value="Cancel" />
+        </div>
+    </div>
+
+}
+<br />
+<div>
+    <a href='@Url.Action("Index", "Project", new { id = Model.ProjectID } )' class="btn btn-sm btn-default">&laquo; Back</a>
+</div>

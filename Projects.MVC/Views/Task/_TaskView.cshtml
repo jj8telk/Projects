@@ -1,0 +1,36 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <span>Tasks</span>
+        </h4>
+    </div>
+    <div class="panel-body">
+        <table class="table" style="font-size:12px;border-bottom:1px solid #ddd;">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Start</th>
+                    <th>Due</th>
+                    <th>Complete</th>
+                    <th>Last Worked On</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var task in Model.GetTasks())
+                {
+                    <tr>
+                        <td>@task.TaskDescription</td>
+                        <td>@task.StartDateFormatted</td>
+                        <td>@task.DueDateFormatted</td>
+                        <td>@task.CompleteDateFormatted</td>
+                        <td>@task.LastWorkedOnDateFormatted</td>
+                        <td style="padding-left:10px;"><span class='label label-@task.Status.StatusColor)'>@task.Status.StatusName)</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <a href='@Url.Action("AddTask", "Item", new { id = Model.ItemID } )' class="btn btn-xs btn-primary">Add Task &raquo;</a>
+    </div>
+</div>

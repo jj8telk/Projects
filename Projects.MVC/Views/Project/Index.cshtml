@@ -1,0 +1,192 @@
+﻿@model Projects.BL.Project
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.ProjectName</h2>
+
+<p>@Model.ProjectDescription</p>
+
+<h4>Developer Notes</h4>
+<p>@Model.DeveloperNotes</p>
+<br />
+
+<div class="panel-group" style="margin-bottom:10px;">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="overflow:auto;">
+            <div style="float:left;">
+                <h4 class="panel-title">
+                    <a data-toggle='collapse' href='#collapse-SVN'>SVN</a>
+                </h4>
+            </div>
+            <div style="float:right;">
+                <a href='@Url.Action("Index", "ProjectSVN", new { id = Model.ProjectID })' class="btn btn-xs btn-primary">View &raquo;</a>
+            </div>
+        </div>
+        <div id='collapse-SVN' class="panel-collapse collapse">
+            <div class="panel-body">
+                <table>
+                    @foreach (var item in Model.GetSVN())
+                    {
+                        <tr>
+                            <th><span style="font-size:13px;font-weight:bold;">@item.SVNName</span></th>
+                            <td><a style="font-size:12px;" href='@item.SVNLocation' target="_blank">@item.SVNLocation</a></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel-group" style="margin-bottom:10px;">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="overflow:auto;">
+            <div style="float:left;">
+                <h4 class="panel-title">
+                    <a data-toggle='collapse' href='#collapse-DB'>Database</a>
+                </h4>
+            </div>
+            <div style="float:right;">
+                <a href='@Url.Action("Index", "ProjectDB", new { id = Model.ProjectID })' class="btn btn-xs btn-primary">View &raquo;</a>
+            </div>
+        </div>
+        <div id='collapse-DB' class="panel-collapse collapse">
+            <div class="panel-body">
+                @foreach (var obj in Model.DBObjects.GroupBy(x => x.DBID).Select(y => y.First()))
+                {
+                    <h4>Server: <strong>@obj.DBServer.DBServerName</strong> &nbsp;&nbsp;&nbsp; Database: <strong>@obj.DB.DBName</strong></h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <strong>Tables</strong><br />
+                            <table>
+                                @foreach (var item in Model.DBObjects.Where(x => x.DBID == obj.DBID).Where(x => x.DBObjectType == "T"))
+                                {
+                                    <tr>
+                                        <td><span style="font-size:13px;">@item.DBObjectName</span></td>
+                                        <td style="padding-left:10px;"><span class='label label-@Html.DisplayFor(modelItem => item.Status.StatusColor)'>@Html.DisplayFor(modelItem => item.Status.StatusName)</span></td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Sprocs</strong><br />
+                            <table>
+                                @foreach (var item in Model.DBObjects.Where(x => x.DBID == obj.DBID).Where(x => x.DBObjectType == "S"))
+                                {
+                                    <tr>
+                                        <td><span style="font-size:13px;">@item.DBObjectName</span></td>
+                                        <td style="padding-left:10px;"><span class='label label-@Html.DisplayFor(modelItem => item.Status.StatusColor)'>@Html.DisplayFor(modelItem => item.Status.StatusName)</span></td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Functions</strong><br />
+                            <table>
+                                @foreach (var item in Model.DBObjects.Where(x => x.DBID == obj.DBID).Where(x => x.DBObjectType == "F"))
+                                {
+                                    <tr>
+                                        <td><span style="font-size:13px;">@item.DBObjectName</span></td>
+                                        <td style="padding-left:10px;"><span class='label label-@Html.DisplayFor(modelItem => item.Status.StatusColor)'>@Html.DisplayFor(modelItem => item.Status.StatusName)</span></td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<hr />
+<div class="panel-group" style="margin-bottom:10px;">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="overflow:auto;">
+            <div style="float:left;">
+                <h4 class="panel-title">
+                    <a data-toggle='collapse' href='#collapse-Dev'>Development</a>
+                </h4>
+            </div>
+            <div style="float:right;">
+                <a href='@Url.Action("Items", "Project", new { id = Model.ProjectID, type = "D" })' class="btn btn-xs btn-primary">View &raquo;</a>
+            </div>
+        </div>
+        <div id='collapse-Dev' class="panel-collapse collapse in">
+            <div class="panel-body">
+                <table style="font-size:12px;">
+                    @foreach (var item in Model.GetParentItemsByType("D"))
+                    {
+                        <tr>
+                            <td style="padding-right:10px;">@item.AssignDateFormatted</td>
+                            <th><a style="font-size:13px;font-weight:bold;" href='@Url.Action("Index", "Item", new { id = item.ItemID })'>@item.ItemName</a></th>
+                            <td style="padding-left:10px;"><span class='label label-@Html.DisplayFor(modelItem => item.Status.StatusColor)'>@Html.DisplayFor(modelItem => item.Status.StatusName)</span></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel-group" style="margin-bottom:10px;">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="overflow:auto;">
+            <div style="float:left;">
+                <h4 class="panel-title">
+                    <a data-toggle='collapse' href='#collapse-Up'>Updates</a>
+                </h4>
+            </div>
+            <div style="float:right;">
+                <a href='@Url.Action("Items", "Project", new { id = Model.ProjectID, type = "U" })' class="btn btn-xs btn-primary">View &raquo;</a>
+            </div>
+        </div>
+        <div id='collapse-Up' class="panel-collapse collapse in">
+            <div class="panel-body">
+                <table style="font-size:12px;">
+                    @foreach (var item in Model.GetParentItemsByType("U"))
+                    {
+                        <tr>
+                            <td style="padding-right:10px;">@item.AssignDateFormatted</td>
+                            <th><a style="font-size:13px;font-weight:bold;" href='@Url.Action("Index", "Item", new { id = item.ItemID })'>@item.ItemName</a></th>
+                            <td style="padding-left:10px;"><span class='label label-@Html.DisplayFor(modelItem => item.Status.StatusColor)'>@Html.DisplayFor(modelItem => item.Status.StatusName)</span></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel-group" style="margin-bottom:10px;">
+    <div class="panel panel-default">
+        <div class="panel-heading" style="overflow:auto;">
+            <div style="float:left;">
+                <h4 class="panel-title">
+                    <a data-toggle='collapse' href='#collapse-Bug'>Bugs</a>
+                </h4>
+            </div>
+            <div style="float:right;">
+                <a href='@Url.Action("Items", "Project", new { id = Model.ProjectID, type = "B" })' class="btn btn-xs btn-primary">View &raquo;</a>
+            </div>
+        </div>
+        <div id='collapse-Bug' class="panel-collapse collapse in">
+            <div class="panel-body">
+                <table style="font-size:12px;">
+                    @foreach (var item in Model.GetParentItemsByType("B"))
+                    {
+                        <tr>
+                            <td style="padding-right:10px;">@item.AssignDateFormatted</td>
+                            <th><a style="font-size:13px;font-weight:bold;" href='@Url.Action("Index", "Item", new { id = item.ItemID })'>@item.ItemName</a></th>
+                            <td style="padding-left:10px;"><span class='label label-@Html.DisplayFor(modelItem => item.Status.StatusColor)'>@Html.DisplayFor(modelItem => item.Status.StatusName)</span></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div>
+    <a href='@Url.Action("Index", "Home")' class="btn btn-sm btn-default">&laquo; Back</a>    
+</div>

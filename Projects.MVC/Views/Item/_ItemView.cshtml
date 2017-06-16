@@ -1,0 +1,54 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div style="float:left;line-height:25px;">
+            <h3 style="margin:0;">@Model.ItemName</h3>
+            @if (Model.ItemDescription != "")
+            {
+                <span style="font-size:13px;">@Model.ItemDescription</span>
+                <br />
+            }
+            <span style="font-size:13px;" class='label label-@Model.Status.StatusColor'>@Model.Status.StatusName</span>
+            <br />
+            @if (Model.LastWorkedOnDate != null)
+            {
+                <span style="font-style:italic;font-size:12px;">
+                    @if (Model.StatusID == 3)
+                    {
+                        <span>Completed On</span>
+                    }
+                    else
+                    {
+                        <span>Last Updated</span>
+                    }
+                    : @Model.LastWorkedOnDateFormatted
+                </span>
+                <br />
+            }
+        </div>
+        <div style="float:right;">
+            <a href='@Url.Action("Edit", "Item", new { id = Model.ItemID } )' class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-edit"></span></a>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin:15px 0 15px 0;">
+    <div class="col-md-3" style="text-align:center;">
+        <span style="text-transform:uppercase;font-size:11px;font-weight:bold;letter-spacing:2px;">Assigned On</span>
+        <br />
+        @Model.AssignDateFormatted
+    </div>
+    <div class="col-md-3" style="text-align:center;">
+        <span style="text-transform:uppercase;font-size:11px;font-weight:bold;letter-spacing:2px;">Due On</span>
+        <br />
+        @Model.DueDateFormatted
+    </div>
+    <div class="col-md-3" style="text-align:center;">
+        <span style="text-transform:uppercase;font-size:11px;font-weight:bold;letter-spacing:2px;">Started On</span>
+        <br />
+        @Model.StartDateFormatted
+    </div>
+    <div class="col-md-3" style="text-align:center;">
+        <span style="text-transform:uppercase;font-size:11px;font-weight:bold;letter-spacing:2px;">Completed On</span>
+        <br />
+        @Model.CompleteDateFormatted
+    </div>
+</div>

@@ -1,0 +1,26 @@
+﻿<table class="table table-sm" style="font-size:12px;">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Type</th>
+            <th>Project</th>
+            <th>File</th>
+            <th>Line(s)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model.GetTasks())
+        {
+            <tr class="table-@task.Status.StatusColor">
+                <td><a href='@Url.Action("Edit", "Task", new { id = task.TaskID })'>@task.TaskDescription</a></td>
+                <td><span class="label label-@task.AppType.Color">@task.AppTypeID</span></td>
+                <td>@task.AppProjectName</td>
+                <td>@task.AppFile</td>
+                <td>@task.LineNumbers</td>
+                <td>@task.Status.StatusName</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -1,0 +1,31 @@
+﻿@model Projects.BL.Item
+
+@{
+    ViewBag.Title = Model.ItemTypeFormatted;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Project.ProjectName</h2>
+<div style="clear:right;overflow:auto;">
+    @foreach (var item in Model.GetBreadCrumb())
+    {
+        <div style="float:left;margin-right:10px;">
+            <a href='@Url.Action("", "Item", new { id = item.ItemID })' class="btn btn-md btn-@item.Status.StatusColor">@item.ItemName</a>
+        </div>
+    }
+</div>
+
+@Html.Partial("_ItemView", Model)
+
+@if (Model.GetTasks().Count > 0)
+{
+    @Html.Partial("~/Views/Task/_TaskListView.cshtml", Model)
+}
+
+@Html.Partial("_ItemListView", Model.GetItems())
+<a href='@Url.Action("AddSubItem", "Item", new { id = Model.ItemID } )' class="btn btn-sm btn-primary">Add Sub Item &raquo;</a>
+<hr />
+<div>
+    <a href='@Url.Action("Index", "Project", new { id = Model.ProjectID } )' class="btn btn-sm btn-default">&laquo; Back</a>
+</div>
+

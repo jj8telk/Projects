@@ -1,0 +1,29 @@
+﻿@model Projects.BL.Item
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Project.ProjectName</h2>
+<h4>&laquo;Breadcrumb Trail&raquo;</h4>
+<br />
+@using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+    
+        @(Html.EditorFor(model => model))
+    
+        <input type="submit" value="Save" class="btn btn-sm btn-success" />
+}
+
+<br />
+
+@Html.Partial("~/Views/Task/_TaskListView.cshtml", Model)
+
+@Html.Partial("_ItemListView", Model.GetItems())
+
+<hr />
+<div>
+    <a href='@Url.Action("Index", "Item", new { id = Model.ItemID } )' class="btn btn-sm btn-default">&laquo; Back</a>
+</div>

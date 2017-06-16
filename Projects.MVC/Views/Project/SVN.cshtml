@@ -1,0 +1,75 @@
+﻿@model Projects.BL.ProjectSVN
+
+@{
+    ViewBag.Title = Model.Project.ProjectName + " SVN";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#txtAdd").autocomplete({
+            source: function (request, response) {              
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Content("~/Project/Autocomplete/1")',
+                    dataType: "json",
+                    data: {
+                        q: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            focus: function (event, ui) {
+                $("#txtAdd").val(ui.item.label);  // forces name to be displayed in textbox instead of ID after selection is made
+                return false;
+            },
+            select: function (event, ui) {
+                $("#txtAdd").val(ui.item.label); // display the selected text
+                $("#hdnAdd").val(ui.item.value); // save selected id to hidden input
+
+                return false;
+            }
+        });
+    });
+</script>
+
+
+
+<h2>@Model.Project.ProjectName</h2>
+<h3>SVN</h3>
+
+<table class="table table-bordered" >
+    @foreach (var item in Model.SVN)
+    {
+        <tr>
+            <th>@item.SVNName</th>
+            <td><a href='@item.SVNLocation' target="_blank">@item.SVNLocation</a></td>
+            <td><input id="btnRemove" class="btn btn-xs btn-danger" type="button" value="remove" /></td>
+        </tr>
+    }
+</table>
+<br />
+<input id="btnAdd" class="btn btn-sm btn-primary" type="button" value="Add" />
+
+@using (Html.BeginForm("SVN", "Project", FormMethod.Post))
+{
+<div id="divAdd" class="row">
+    <div class="col-md-12">
+        <input type="text" id="txtAdd" class="form-control" />            
+        <input type="hidden" id="hdnAdd" />
+        <br />
+        <input id="btnSave" class="btn btn-sm btn-success" type="button" value="Save" />
+        <input id="btnCancel" class="btn btn-sm btn-default" type="button" value="Cancel" />
+    </div>
+</div>
+}
+
+
+@using (Html.BeginForm("SVN", "Project", FormMethod.Post))
+{
+    @Html.TextBoxFor(model => model.Project.CompleteDate)
+    @Html.ValidationMessageFor(model => model.Project.CompleteDate)
+    <button type="submit">Save</button>
+}

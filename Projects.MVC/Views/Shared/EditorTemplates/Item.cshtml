@@ -1,0 +1,33 @@
+﻿@model Projects.BL.Item
+
+@Html.TextBoxFor(model => model.ItemName, new { id = "txtItemName", @class = "form-control" })
+@Html.TextAreaFor(model => model.ItemDescription, new { id = "txtItemDescription", @class = "form-control" })
+@Html.DropDownListFor(model => model.StatusID, (SelectList)ViewBag.Statuses, new { @class = "form-control" })
+@Html.TextBoxFor(model => model.LastWorkedOnDate, new { id = "txtLastWorkedOnDate", @class = "form-control" })
+@Html.HiddenFor(model => model.ItemID)
+@Html.HiddenFor(model => model.ItemType)
+@Html.HiddenFor(model => model.ProjectID)
+@Html.HiddenFor(model => model.ParentID)
+
+<div class="row">
+    <div class="col-md-3" style="text-align:center;">
+        <span style="text-transform:uppercase;font-size:11px;font-weight:bold;letter-spacing:2px;">Assigned On</span>
+        <br />
+        @Html.TextBoxFor(model => model.AssignDate, new { id = "txtAssignDate", @class = "form-control" })
+    </div>
+    <div class="col-md-3" style="text-align:center;">
+        <span style="text-transform:uppercase;font-size:11px;font-weight:bold;letter-spacing:2px;">Due On</span>
+        <br />
+        @Html.TextBoxFor(model => model.DueDate, new { id = "txtDueDate", @class = "form-control" })
+    </div>
+    <div class="col-md-3" style="text-align:center;">
+        <span style="text-transform:uppercase;font-size:11px;font-weight:bold;letter-spacing:2px;">Started On</span>
+        <br />
+        @Html.TextBoxFor(model => model.StartDate, new { id = "txtStartDate", @class = "form-control" })
+    </div>
+    <div class="col-md-3" style="text-align:center;">
+        <span style="text-transform:uppercase;font-size:11px;font-weight:bold;letter-spacing:2px;">Completed On</span>
+        <br />
+        @Html.TextBoxFor(model => model.CompleteDate, new { id = "txtCompleteDate", @class = "form-control" })
+    </div>
+</div>

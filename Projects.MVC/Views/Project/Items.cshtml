@@ -1,0 +1,62 @@
+﻿@model Projects.BL.Project
+
+@{
+    ViewBag.Title = "Items";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.ProjectName</h2>
+<h3>@Projects.BL.Item.GetItemType(Request.QueryString["type"].ToString())</h3>
+<br />
+@foreach (var item in Model.GetParentItemsByType(Request.QueryString["type"].ToString()))
+{
+    <div class="panel-group" style="margin-bottom:10px;">
+        <div class="panel panel-@item.Status.StatusColor">
+            <div class="panel-heading" style="overflow:auto;">
+                <div style="float:left;">
+                    <h4 class="panel-title">
+                        <a data-toggle='collapse' href='#collapse-@item.ItemID'>@item.ItemName</a>
+                    </h4>
+                </div>
+                <div style="float:right;">
+                    <a href='@Url.Action("Index", "Item", new { id = item.ItemID })' class="btn btn-xs btn-primary">View &raquo;</a>
+                </div>
+            </div>
+            <div id='collapse-@item.ItemID' class="panel-collapse collapse">
+                <div class="panel-body">
+                    @item.ItemDescription
+                    <br /><br />
+                    
+                    @Html.Partial("~/Views/Task/_TaskList.cshtml", item)
+
+                    @foreach (var subItem in item.GetItems())
+                    {
+                        <div class="panel-group" style="margin-bottom:10px;">
+                            <div class="panel panel-@subItem.Status.StatusColor">
+                                <div class="panel-heading" style="overflow:auto;">
+                                    <div style="float:left;">
+                                        <h4 class="panel-title">
+                                            <span>@subItem.ItemName</span>
+                                        </h4>
+                                    </div>
+                                    <div style="float:right;">
+                                        <a href='@Url.Action("Index", "Item", new { id = subItem.ItemID })' class="btn btn-xs btn-primary">View &raquo;</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<br />
+
+<a id="btnAdd" class="btn btn-sm btn-primary" href='@Url.Action("Index", "ProjectItem", new { id = Model.ProjectID, type = Request.QueryString["type"].ToString() })'>Add</a>
+
+<br />
+<hr />
+<div>
+    <a href='@Url.Action("Index", "Project", new { id = Model.ProjectID })' class="btn btn-sm btn-default">&laquo; Back</a>    
+</div>

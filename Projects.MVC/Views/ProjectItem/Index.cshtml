@@ -1,0 +1,46 @@
+﻿@model Projects.BL.ProjectItem
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Project.ProjectName</h2>
+<h3>Updates</h3>
+<br />
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.ItemName</td>
+                <td><a href='@Url.Action("Edit", "Item", new { id = item.ItemID })' class="btn btn-xs btn-primary">Edit</a></td>
+                <td><a href='@Url.Action("Delete", "ProjectItem", new { id = item.ItemID, type = Request.QueryString["type"].ToString() })' class="btn btn-xs btn-danger">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+@using (Html.BeginForm("Edit", "ProjectItem", new { id = Model.ProjectID, type = Request.QueryString["type"].ToString() }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div id="divAdd">
+        @Html.TextBoxFor(model => model.ItemName, new { id = "txtAdd", @class = "form-control" })
+        @Html.HiddenFor(model => model.ProjectID, new { id = "hdnProjectID" })
+        @Html.HiddenFor(model => model.ItemType, new { id = "hdnItemType" })
+        <br />
+        <input id="btnSave" type="submit" class="btn btn-sm btn-success" value="Save" />        
+    </div>
+}
+<hr />
+<div>
+    <a href='@Url.Action("Items", "Project", new { id = Model.ProjectID, type = Request.QueryString["type"].ToString() })' class="btn btn-sm btn-default">&laquo; Back</a>
+</div>
